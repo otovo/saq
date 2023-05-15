@@ -342,7 +342,7 @@ def start(
 
 async def async_check_health(queue: Queue) -> int:
     info = await queue.info()
-    if not info.get("name") == queue.name:
+    if info.get("name") != queue.name:
         logger.warning("Health check failed")
         status = 1
     else:

@@ -41,9 +41,7 @@ class TestWorker(AioHTTPTestCase):
         async with self.client.get("/api/queues") as resp:
             self.assertEqual(resp.status, 200)
             json = await resp.json()
-            self.assertEqual(
-                set(q["name"] for q in json["queues"]), {"queue1", "queue2"}
-            )
+            self.assertEqual({q["name"] for q in json["queues"]}, {"queue1", "queue2"})
 
         async with self.client.get(f"/api/queues/{self.queue1.name}") as resp:
             self.assertEqual(resp.status, 200)

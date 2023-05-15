@@ -514,9 +514,7 @@ class Queue:
         kwargs: Same as Queue.enqueue
         """
         results = await self.map(job_or_func, timeout=timeout, iter_kwargs=[kwargs])
-        if results:
-            return results[0]
-        return None
+        return results[0] if results else None
 
     async def map(
         self,
@@ -569,10 +567,7 @@ class Queue:
             if status in UNSUCCESSFUL_TERMINAL_STATUSES and not return_exceptions:
                 return True
 
-            if not pending_job_keys:
-                return True
-
-            return False
+            return not pending_job_keys
 
         # Start listening before we enqueue the jobs.
         # This ensures we don't miss any updates.

@@ -111,8 +111,7 @@ async def _get_job(request: Request) -> Job:
 async def exceptions(request: Request, handler: Handler) -> StreamResponse:
     if request.path.startswith("/api"):
         try:
-            resp = await handler(request)
-            return resp
+            return await handler(request)
         except Exception:
             error = traceback.format_exc()
             logging.error(error)
@@ -127,9 +126,7 @@ async def shutdown(app: Application) -> None:
 
 def create_app(queues: list[Queue]) -> Application:
     middlewares = [exceptions]
-    password = os.environ.get("AUTH_PASSWORD")
-
-    if password:
+    if password := os.environ.get("AUTH_PASSWORD"):
         from aiohttp_basicauth import BasicAuthMiddleware  # type:ignore[import]
 
         user = os.environ.get("AUTH_USER", "admin")
